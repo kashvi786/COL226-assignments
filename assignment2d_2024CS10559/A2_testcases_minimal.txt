@@ -1,0 +1,167 @@
+================================================================
+A2_TESTCASES_MINIMAL.TXT
+Assignment 2 Combined Demo Testcases
+Sections: 2.1 Bigint, 2.2 Lexer, 2.3 Parser, 2.4 Type checker
+================================================================
+
+General instructions:
+- These are demo-time testcases, not an exhaustive private test suite.
+- Students may use their own function names and token/type constructors.
+- They must run the equivalent operation implemented in their submission.
+- Outputs should be printed in a human-readable way.
+- Exact constructor names may differ, but the meaning must be clear.
+- The aim is to finish these testcases plus viva questions within a 10-15 minute slot.
+
+================================================================
+SECTION 2.1: BIGINT PACKAGE
+================================================================
+
+For bigint tests, construct bigints either directly using the submitted
+bigint representation or using any constructor/conversion function implemented
+by the student. Print each final bigint using the submitted pretty-print function.
+
+----------------------------------------------------------------
+2.1.1 Conversion, pretty-print, unary negation, absolute value
+----------------------------------------------------------------
+Run:
+- convert OCaml int 0 to bigint and print it
+- convert OCaml int (-42) to bigint and print it
+- convert OCaml int 120030 to bigint and print it
+- print negation of 0
+- print absolute value of -98765
+
+----------------------------------------------------------------
+2.1.2 Addition, subtraction, signed cancellation, comparisons
+----------------------------------------------------------------
+Let:
+- A = 99999999999999999999
+- B = 1
+- C = 5000
+- D = -5000
+- E = 12345
+- F = 54321
+
+Run:
+- A + B
+- A - A
+- C + D
+- E - F
+- F - E
+
+Also run the five required comparison operations on:
+- 12345 and 12345
+- -5 and -10
+- 99999 and 100000
+
+----------------------------------------------------------------
+2.1.3 Multiplication, quotient, remainder, division by zero
+----------------------------------------------------------------
+Run:
+- 12345 * (-6789)
+- 99999 * 99999
+- quotient(123456789, 12345)
+- remainder(123456789, 12345)
+- quotient(12345, 0)
+- remainder(12345, 0)
+
+================================================================
+SECTION 2.2: LEXICAL ANALYSIS
+================================================================
+
+For each input string, run the lexer and print the token sequence. Exact token
+constructor names may differ; token categories must be clear.
+
+----------------------------------------------------------------
+2.2.1 Core tokens: arithmetic, comparison, constants, quote, empty list
+----------------------------------------------------------------
+Input:
+(+ 12 (* 3 4) (- 10 5) (div 20 3) (mod 20 3))
+(= 1 1) (=/= 1 2) (<= 2 3) (>= 3 2) (> 4 1) (< 1 4)
+(quote a) 'a '(a b c) t ()
+
+----------------------------------------------------------------
+2.2.2 Keywords, compound car/cdr forms, comments, dot identifiers
+----------------------------------------------------------------
+Input:
+;;;; file header comment
+(defun append. (x y)
+  (cond ; inline comment after cond
+    ((null. x) y) ;; indented comment
+    (t (cons (car x) (append. (cadr x) (caadr y)))))) ; final inline comment
+
+================================================================
+SECTION 2.3: PARSER
+================================================================
+
+For each input, run the parser and print the raw AST or parse result. Exact AST
+constructor names may differ, but the structure must be clear.
+
+----------------------------------------------------------------
+2.3.1 Basic expressions and nested mixed list
+----------------------------------------------------------------
+Run these as separate parser inputs:
+foo
+123
+()
+(foo)
+(a b (c) (+ e) f)
+
+----------------------------------------------------------------
+2.3.2 Quote, comments, and malformed input
+----------------------------------------------------------------
+Valid input:
+'(a ; comment about first element
+  b (c d) 123) ;; comment after list
+
+Invalid input:
+(a b (c)
+
+================================================================
+SECTION 2.4: TYPE CHECKING WITH OVERLOADING
+================================================================
+
+For each input, run the type checker and print the type result or type error.
+Exact printed names may differ, but the meaning must be clear.
+
+----------------------------------------------------------------
+2.4.1 Constants and quoted list
+----------------------------------------------------------------
+Run:
+t
+()
+12345
+'(a b c d)
+
+----------------------------------------------------------------
+2.4.2 Valid operators: arithmetic, comparison, boolean, list primitives
+----------------------------------------------------------------
+Run:
+(+ 1 2 3)
+(> (+ 1 2) 2)
+(and (not t) (or t t))
+(cdr '(a b c))
+(cons 1 '(2 3))
+
+----------------------------------------------------------------
+2.4.3 Type errors
+----------------------------------------------------------------
+Run:
+(eq 1 t)
+(+ 1 t)
+(car ())
+(cons 1 2)
+(cond (1 10) (t 20))
+
+----------------------------------------------------------------
+2.4.4 Lambda, arity checking, and recursive definition
+----------------------------------------------------------------
+Run:
+((lambda (x y) (+ x y)) 4 5)
+((lambda (x y) (+ x y)) 4)
+
+(defun fact (n)
+  (cond ((<= n 1) 1)
+        (t (* n (fact (- n 1))))))
+================================================================
+END OF FILE
+================================================================

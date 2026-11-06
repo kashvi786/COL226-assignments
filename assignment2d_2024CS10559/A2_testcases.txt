@@ -1,0 +1,191 @@
+================================================================
+A2_TESTCASES.TXT
+Assignment 2 Combined Demo Testcases
+Sections: 2.1 Bigint, 2.2 Lexer, 2.3 Parser, 2.4 Type checker
+================================================================
+
+General instructions:
+- You may use own function names and token/type constructors.
+- Must run the equivalent operation implemented in the submission.
+- Should print results in a human-readable way.
+
+================================================================
+SECTION 2.1: BIGINT PACKAGE
+================================================================
+
+For the following tests, construct bigints either directly using the submitted
+bigint representation or using any constructor/conversion function you used. 
+Print each final bigint using the pretty-print function implemented in the 
+submission.
+
+2.1.1 Conversion, pretty-print, unary negation, absolute value
+Run:
+- convert OCaml int 0 to bigint and print it
+- convert OCaml int 7 to bigint and print it
+- convert OCaml int (-42) to bigint and print it
+- convert OCaml int 120030 to bigint and print it
+- print negation of 0
+- print negation of 42
+- print absolute value of -98765
+
+2.1.2 Addition and subtraction, including carries and signed cancellation
+Let:
+- A = 99999999999999999999
+- B = 1
+- C = 5000
+- D = -5000
+- E = 12345
+- F = 54321
+Run:
+- A + B
+- A - A
+- C + D
+- E - F
+- F - E
+
+2.1.3 Multiplication, including sign and carry propagation
+Run:
+- 12345 * (-6789)
+- 99999 * 99999
+- 0 * 987654321
+- (-12) * (-13)
+
+2.1.4 Quotient and remainder for positive inputs
+Run:
+- quotient(123456789, 12345)
+- remainder(123456789, 12345)
+- quotient(9876543210, 97)
+- remainder(9876543210, 97)
+
+2.1.5 Comparison operations
+Run all five comparison operations required in the assignment on the following pairs:
+- 12345 and 12345
+- -100 and 0
+- -5 and -10
+- 99999 and 100000
+
+2.1.6 Undefined arithmetic operation
+Run:
+- quotient(12345, 0)
+- remainder(12345, 0)
+
+================================================================
+SECTION 2.2: LEXICAL ANALYSIS
+================================================================
+
+For each input string, run the lexer and print the token sequence. Exact token
+constructor names may differ; the token categories must be clear.
+
+2.2.1 Arithmetic operators, numerals, parentheses
+Input:
+(+ 12 (* 3 4) (- 10 5) (div 20 3) (mod 20 3))
+
+2.2.2 Comparison operators
+Input:
+(= 1 1) (=/= 1 2) (<= 2 3) (>= 3 2) (> 4 1) (< 1 4)
+
+2.2.3 Constants, quote keyword, quote symbol, empty list
+Input:
+(quote a) 'a '(a b c) t ()
+
+2.2.4 Primitive operations and compound car/cdr abbreviations
+Input:
+(car x) (cdr x) (cadr x) (caadr x) (cdar x) (cdadr x) (cons a b) (cond (t a))
+
+2.2.5 Comments and identifiers ending in dot
+Input:
+;;;; file header comment
+(defun append. (x y)
+  (cond ; inline comment after cond
+    ((null. x) y) ;; indented comment
+    (t (cons (car x) (append. (cdr x) y))))) ; final inline comment
+
+================================================================
+SECTION 2.3: PARSER
+================================================================
+
+For each input, run the parser and print the raw AST or parse result. Exact AST
+constructor names may differ, but the structure must be clear.
+
+2.3.1 Atom, number, empty list, singleton list
+Run these as separate parser inputs:
+foo
+123
+()
+(foo)
+
+2.3.2 Nested mixed list
+Input:
+(a b (c) (+ e) f)
+
+2.3.3 Quote forms
+Run these as separate parser inputs:
+(quote a)
+'a
+'(a b (c d) 123)
+
+2.3.4 Comments inside and after a list
+Input:
+(a ; comment about a
+ b (c) ;; comment about nested list
+ d) ;; comment after list
+
+2.3.5 Ill-formed list
+Input:
+(a b (c)
+
+================================================================
+SECTION 2.4: TYPE CHECKING WITH OVERLOADING
+================================================================
+
+For each input, run the type checker and print the type result or type error.
+Exact printed names may differ, but the meaning must be clear.
+
+2.4.1 Constants and quoted list
+Run:
+t
+()
+12345
+'(a b c d)
+
+2.4.2 Arithmetic, comparison, and boolean operators
+Run:
+(+ 1 2 3)
+(* 2 3 4)
+(- 10 4)
+(div 17 5)
+(mod 17 5)
+(> 5 3)
+(and (not t) (or t t))
+
+2.4.3 List and atom primitives
+Run:
+(atom 1)
+(atom '(a b c))
+(cdr '(a b c))
+(cons 1 '(2 3))
+
+2.4.4 Type errors and eq type consistency
+Run:
+(eq 1 2)
+(eq 1 t)
+(+ 1 t)
+(car ())
+(cons 1 2)
+
+2.4.5 cond typing
+Run:
+(cond ((atom 1) 10) ((> 3 4) 20) (t 30))
+(cond (1 10) (t 20))
+
+2.4.6 Lambda and function application
+Run:
+((lambda (x y) (+ x y)) 4 5)
+((lambda (x) (cons x '(2 3))) 1)
+((lambda (x y) (+ x y)) 4)
+
+2.4.7 Recursive function definition using defun
+Run:
+(defun fact (n)
+  (cond ((<= n 1) 1)
+        (t (* n (fact (- n 1))))))
